@@ -1,0 +1,13 @@
+package com.esmt;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ESMTApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
