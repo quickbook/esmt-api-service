@@ -41,7 +41,7 @@ public class TokenController {
     public ResponseEntity<Map<String, Object>> healthCheck() {
 
         Map<String, Object> response = new HashMap<>();
-        response.put("status", "TradePost API Service is running");
+        response.put("status", "ESMT API Service is running");
         response.put("timestamp", Instant.now().toString());
 
         return ResponseEntity.ok(response);

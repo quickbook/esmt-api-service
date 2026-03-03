@@ -63,6 +63,7 @@ public class SecurityConfig {
 
                 // Auth endpoints
                 .requestMatchers("/esmt/auth/**").permitAll()
+                .requestMatchers("/esmt/health/**").permitAll()
 
                 // Example fine-grained rules (adjust as needed)
                 
