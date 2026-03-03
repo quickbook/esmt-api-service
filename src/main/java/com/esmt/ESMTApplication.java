@@ -1,4 +1,4 @@
-package com.esmt.config;
+package com.esmt;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
