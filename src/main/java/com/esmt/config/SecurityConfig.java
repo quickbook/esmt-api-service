@@ -59,36 +59,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.GET,  "/api/whatsapp/**").permitAll()
     		    .requestMatchers(HttpMethod.POST, "/api/whatsapp/**").permitAll()
-    		    .requestMatchers(HttpMethod.GET, "/tradingpost/api/v1/users/all").hasAnyRole("ADMIN", "ROOT")
+    		    .requestMatchers(HttpMethod.GET, "/esmt/api/v1/users/all").hasAnyRole("ADMIN", "ROOT")
 
                 // Auth endpoints
-                .requestMatchers("/tradingpost/auth/**").permitAll()
+                .requestMatchers("/esmt/auth/**").permitAll()
 
                 // Example fine-grained rules (adjust as needed)
-                .requestMatchers(HttpMethod.GET, "/tradingpost/api/v1/firms/**").authenticated()
-                .requestMatchers(HttpMethod.GET, "/tradingpost/api/v1/challenges/**").authenticated()
-                .requestMatchers(HttpMethod.GET, "/tradingpost/api/v1/reviews/**").authenticated()
                 
-                .requestMatchers(HttpMethod.POST, "/tradingpost/api/v1/firms/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/tradingpost/api/v1/challenges/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/tradingpost/api/v1/reviews/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/tradingpost/api/v1/enquiries/**").authenticated()
-               
- 
-                .requestMatchers(HttpMethod.PUT, "/tradingpost/api/v1/firms/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/tradingpost/api/v1/reviews/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/tradingpost/api/v1/challenges/**").hasRole("ADMIN")
-                
-                .requestMatchers(HttpMethod.DELETE, "/tradingpost/api/v1/firms/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/tradingpost/api/v1/reviews/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/tradingpost/api/v1/challenges/**").hasRole("ADMIN")
-                
-                .requestMatchers(HttpMethod.PATCH, "/tradingpost/api/v1/firms/**").authenticated()
-                .requestMatchers(HttpMethod.PATCH, "/tradingpost/api/v1/reviews/**").authenticated()
-                .requestMatchers(HttpMethod.PATCH, "/tradingpost/api/v1/challenges/**").authenticated()
-           
-
-                .requestMatchers("/tradingpost/api/v1/users/**").authenticated()
+                .requestMatchers("/esmt/api/v1/users/**").authenticated()
 
                 // everything else authenticated
                 .anyRequest().authenticated()
