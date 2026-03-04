@@ -17,6 +17,7 @@ import com.esmt.dto.ErrorDetails;
 import com.esmt.response.dto.ApiResponse;
 import com.esmt.service.ExceptionLoggingService;
 import com.esmt.service.TokenService;
+import com.esmt.util.CommonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
@@ -60,7 +61,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if (roleName == null) {
                     roleName = "USER"; // Default to USER if role is missing
                 }
-				String clientIp = clientIp(request);
+				String clientIp = CommonUtil.clientIp(request);
 				if (clientIp != null && clientIp.startsWith("::ffff:"))
 					clientIp = clientIp.substring(7);
 				if (!clientIp.equals(ipInToken)) {
@@ -85,7 +86,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 			} catch (JwtException ex) {
 				// Invalid token -> let Security chain handle 401/403 later
 				
-				exceptionLogger.save(request, ex, HttpServletResponse.SC_UNAUTHORIZED, clientIp(request));
+				exceptionLogger.save(request, ex, HttpServletResponse.SC_UNAUTHORIZED, CommonUtil.clientIp(request));
 				ErrorDetails details = new ErrorDetails("TOKEN_INVALID", ex.getMessage(), null, ex.getClass().getSimpleName());
 				ApiResponse<Object> apiResponse = ApiResponse.<Object>builder()
 						.success(false)
@@ -106,10 +107,5 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-	private String clientIp(HttpServletRequest req) {
-		String xff = req.getHeader("X-Forwarded-For");
-		if (xff != null && !xff.isBlank())
-			return xff.split(",")[0].trim();
-		return req.getRemoteAddr();
-	}
+	
 }

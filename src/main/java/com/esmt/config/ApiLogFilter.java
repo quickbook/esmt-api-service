@@ -9,6 +9,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.esmt.model.ApiLog;
 import com.esmt.repository.ApiLogRepository;
+import com.esmt.util.CommonUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,7 +37,7 @@ public class ApiLogFilter extends OncePerRequestFilter {
             long duration = System.currentTimeMillis() - start;
 
             String clientId = request.getHeader("X-Client-Id");
-            String ip = clientIp(request);
+            String ip = CommonUtil.clientIp(request);
 
             ApiLog log = ApiLog.builder()
                     .clientId(clientId)
@@ -52,9 +53,5 @@ public class ApiLogFilter extends OncePerRequestFilter {
         }
     }
 
-    private String clientIp(HttpServletRequest req) {
-        String xff = req.getHeader("X-Forwarded-For");
-        if (xff != null && !xff.isBlank()) return xff.split(",")[0].trim();
-        return req.getRemoteAddr();
-    }
+    
 }

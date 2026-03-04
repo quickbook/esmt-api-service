@@ -41,7 +41,9 @@ public class ExceptionLoggingService {
             .exceptionType(ex.getClass().getName())
             .build();
 
-        repo.save(log);
+        if (log != null) {
+            repo.save(log);
+        }
     }
 
     private static String clientIp(HttpServletRequest req) {

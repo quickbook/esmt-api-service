@@ -27,6 +27,7 @@ import com.esmt.response.dto.LoginResponse;
 import com.esmt.response.dto.RegisterResponse;
 import com.esmt.response.dto.UserResponse;
 import com.esmt.service.UserService;
+import com.esmt.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -47,7 +48,7 @@ public class UserController {
 	@PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> loginUser(@Valid @RequestBody LoginRequest loginRequest,HttpServletRequest request) {
 		
-		String clientIp = clientIp(request);
+		String clientIp = CommonUtil.clientIp(request);
 		
 		LoginResponse loginData = userService.checkLoginDetails(loginRequest, clientIp);
 		
@@ -63,13 +64,7 @@ public class UserController {
        
         return ResponseEntity.ok(response);
     }
-	// Helper Method, to extract the IP addresses from user API Request
-	private String clientIp(HttpServletRequest req) {
-		String xff = req.getHeader("X-Forwarded-For");
-		if (xff != null && !xff.isBlank())
-			return xff.split(",")[0].trim();
-		return req.getRemoteAddr();
-	}
+	
 	
 	@PostMapping("/register")
 	public ResponseEntity<ApiResponse<RegisterResponse>> registerUser(@Valid @RequestBody RegisterRequest registerRequest,HttpServletRequest request) {

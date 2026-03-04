@@ -2,21 +2,21 @@ package com.esmt.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.esmt.dto.DomainDataDTO;
 import com.esmt.repository.CountryRepository;
 import com.esmt.repository.LeadSourceRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class DomainDataService {
 
-	@Autowired
-    private LeadSourceRepository leadSourceRepository;
+    private final LeadSourceRepository leadSourceRepository;
 	
-	@Autowired
-	private CountryRepository countryRepository;
+	private final CountryRepository countryRepository;
  
 
     public List<DomainDataDTO> getDomainData(String domainName) {
@@ -29,7 +29,7 @@ public class DomainDataService {
                         .map(ls -> new DomainDataDTO(ls.getId(), String.valueOf(ls.getId()),ls.getName()))
                         .toList();
             case "countries":
-                return countryRepository.findAllOrderByNameAsc()
+                return countryRepository.findAllByOrderByNameAsc()
                         .stream()
                         .map(c -> new DomainDataDTO(
                                 c.getId(),

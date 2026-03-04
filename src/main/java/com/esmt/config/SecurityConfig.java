@@ -2,6 +2,7 @@ package com.esmt.config;
 
 import java.util.List;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -18,7 +19,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
 import lombok.RequiredArgsConstructor;
 
@@ -59,14 +59,15 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.GET,  "/api/whatsapp/**").permitAll()
     		    .requestMatchers(HttpMethod.POST, "/api/whatsapp/**").permitAll()
-    		    .requestMatchers(HttpMethod.GET, "/esmt/api/v1/users/all").hasAnyRole("ADMIN", "ROOT")
 
                 // Auth endpoints
                 .requestMatchers("/esmt/auth/**").permitAll()
                 .requestMatchers("/esmt/health/**").permitAll()
+                .requestMatchers("/esmt/api/v1/users/login").permitAll()
+                .requestMatchers("/esmt/api/v1/users/register").permitAll()
 
-                // Example fine-grained rules (adjust as needed)
-                
+                // Fine-grained rules (must come after specific permitAll entries)
+                .requestMatchers(HttpMethod.GET, "/esmt/api/v1/users/all").hasAnyRole("ADMIN", "ROOT")
                 .requestMatchers("/esmt/api/v1/users/**").authenticated()
 
                 // everything else authenticated
@@ -80,10 +81,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * Strong CORS configuration. Add allowed origins and/or allowedOriginPatterns.
-     * Note: if you set allowCredentials(true) you cannot use "*" for origins.
-     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();

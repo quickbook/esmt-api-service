@@ -1,7 +1,8 @@
 package com.esmt.config;
 
-import io.jsonwebtoken.security.Keys;
 import java.util.Base64;
+
+import io.jsonwebtoken.security.Keys;
 
 public class JwtSecretGenerator {
     public static void main(String[] args) {

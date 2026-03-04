@@ -3,7 +3,6 @@ package com.esmt.service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -175,13 +174,13 @@ public class UserService {
 	    if (RoleEnum.ROOT.name().equalsIgnoreCase(roleName)) {
 	        return allUsers.stream()
 	                .map(userMapper::mapToUserResponse)
-	                .collect(Collectors.toList());
+	                .toList();
 	    } else if (RoleEnum.ADMIN.name().equalsIgnoreCase(roleName)) {
 	        return allUsers.stream()
 	                .filter(u -> u.getRole() != null && 
 	                        RoleEnum.USER.name().equalsIgnoreCase(u.getRole().getName()))
 	                .map(userMapper::mapToUserResponse)
-	                .collect(Collectors.toList());
+	                .toList();
 	    }
 	    
 	    return List.of();

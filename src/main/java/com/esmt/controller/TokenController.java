@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.esmt.dto.TokenCacheEntry;
 import com.esmt.service.TokenService;
- 
+import com.esmt.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
@@ -48,7 +48,7 @@ public class TokenController {
     }
 	@PostMapping("/token")
 	public ResponseEntity<?> token(HttpServletRequest request) {
-		String ip = clientIp(request);
+		String ip = CommonUtil.clientIp(request);
 		 log.info("Requested IP {}" , ip);
 	/*	if (!ipAllowlist.isAllowed(ip)) {
 			 log.info("IP not in allowlist {}" , ip);
@@ -66,7 +66,7 @@ public class TokenController {
 
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refresh(@RequestBody RefreshRequest body, HttpServletRequest request) {
-		String ip = clientIp(request);
+		String ip = CommonUtil.clientIp(request);
 		/*if (!ipAllowlist.isAllowed(ip)) {
 			return ResponseEntity.status(403)
 					.body(Map.of("error", "forbidden_ip", "error_description", "IP not in allowlist"));
@@ -82,10 +82,5 @@ public class TokenController {
 		}
 	}
 
-	private String clientIp(HttpServletRequest req) {
-		String xff = req.getHeader("X-Forwarded-For");
-		if (xff != null && !xff.isBlank())
-			return xff.split(",")[0].trim();
-		return req.getRemoteAddr();
-	}
+	
 }

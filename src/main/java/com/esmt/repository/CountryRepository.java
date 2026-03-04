@@ -11,5 +11,5 @@ import com.esmt.model.DmnCountry;
 public interface CountryRepository extends JpaRepository<DmnCountry,Long> {
 	 
 	Optional<DmnCountry> findByCode(String countryCode); 
-	List<DmnCountry>  findAllOrderByNameAsc(); 
+	List<DmnCountry>  findAllByOrderByNameAsc(); 
 }
