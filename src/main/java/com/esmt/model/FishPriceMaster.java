@@ -1,0 +1,50 @@
+package com.esmt.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
+@Entity
+@Table(name = "fish_price_master")
+public class FishPriceMaster {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fish_type_id", nullable = false)
+    private DmnFishTypes fishType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fish_size_id", nullable = false)
+    private DmnFishSize fishSize;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_type_id", nullable = false)
+    private DmnUnitType unitType;
+
+    @Column(name = "variant", length = 50)
+    private String variant;
+
+    @Column(name = "price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
+}
