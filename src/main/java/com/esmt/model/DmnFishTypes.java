@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "dmn_fish_types")
+@Table(name = "dmn_fish_type")
 @Data
 public class DmnFishTypes {
 
