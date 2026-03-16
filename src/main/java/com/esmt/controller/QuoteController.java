@@ -12,7 +12,7 @@ import com.esmt.service.QuoteApplicationService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/quotes")
+@RequestMapping("/esmt/api/v1/quotes")
 @RequiredArgsConstructor
 public class QuoteController {
 
