@@ -1,0 +1,22 @@
+package com.esmt.enums;
+
+public enum QuoteType {
+
+    FISH_TROPHY_BASS,
+
+    FISH_QUALITY_BASS_BREAM,
+
+    FISH_VARIETY_SPECIES,
+
+    FISH_CATFISH,
+
+    FISH_BIG_BREAM_SMALL_POND,
+
+    ADD_CATCHABLE_FISH,
+
+    FEED_POND_BASS,
+
+    STOCK_GRASS_CARP,
+
+    CUSTOM_STOCKING
+}

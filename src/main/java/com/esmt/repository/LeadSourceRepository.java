@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.esmt.model.LeadSource;
+import com.esmt.model.DmnLeadSource;
 
 @Repository
-public interface LeadSourceRepository extends JpaRepository<LeadSource, Long> {
+public interface LeadSourceRepository extends JpaRepository<DmnLeadSource, Long> {
 
-    List<LeadSource> findByIsActiveTrueOrderByNameAsc();
+    List<DmnLeadSource> findByIsActiveTrueOrderByNameAsc();
 }

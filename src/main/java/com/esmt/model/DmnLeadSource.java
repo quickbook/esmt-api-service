@@ -13,7 +13,7 @@ import lombok.Data;
 @Entity
 @Table(name = "dmn_lead_source")
 @Data
-public class LeadSource {
+public class DmnLeadSource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
