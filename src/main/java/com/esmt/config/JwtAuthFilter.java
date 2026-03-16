@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.esmt.dto.ErrorDetails;
 import com.esmt.response.dto.ApiResponse;
+import com.esmt.security.AuthPrincipal;
 import com.esmt.service.ExceptionLoggingService;
 import com.esmt.service.TokenService;
 import com.esmt.util.CommonUtil;
@@ -62,6 +63,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     roleName = "USER"; // Default to USER if role is missing
                 }
 				String clientIp = CommonUtil.clientIp(request);
+				// try to read username claim if present
+				String username = jws.getBody().get("username", String.class);
+				if (username == null || username.isBlank()) {
+					username = jws.getBody().getSubject();
+					if ("ip-access".equalsIgnoreCase(username) || "ip-refresh".equalsIgnoreCase(username)) {
+						username = null;
+					}
+				}
+				// store both username and ip in a small principal object
 				if (clientIp != null && clientIp.startsWith("::ffff:"))
 					clientIp = clientIp.substring(7);
 				if (!clientIp.equals(ipInToken)) {
@@ -69,8 +79,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 				}
 				// Use the extracted role to create the authority list
                 List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + roleName.toUpperCase()));
+				final String principalUsername = username;
 				
-                Authentication authentication = new AbstractAuthenticationToken(authorities) {
+				Authentication authentication = new AbstractAuthenticationToken(authorities) {
 					@Override
 					public Object getCredentials() {
 						return token;
@@ -78,7 +89,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 					@Override
 					public Object getPrincipal() {
-						return ipInToken;
+						return new AuthPrincipal(principalUsername, ipInToken);
 					}
 				};
 				((AbstractAuthenticationToken) authentication).setAuthenticated(true);
@@ -107,5 +118,4 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-	
 }

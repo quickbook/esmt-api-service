@@ -2,6 +2,7 @@ package com.esmt.service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -43,8 +44,8 @@ public class TokenService {
 		this.reuseSame = reuseSame;
 		this.cache = Caffeine.newBuilder().expireAfterWrite(accessTtlSec, TimeUnit.SECONDS).maximumSize(10_000).build();
 	}
-	public TokenCacheEntry issueTokenWithRole(String ip, String roleName) {
-        return generateAndCache(ip, roleName);
+	public TokenCacheEntry issueTokenWithRole(String ip, String roleName, String username) {
+		return generateAndCache(ip, roleName, username);
     }
 
 	public TokenCacheEntry issueOrReuseForIp(String ip) {
@@ -53,7 +54,7 @@ public class TokenService {
 		if (reuseSame && cached != null && cached.accessExpiry().isAfter(now)) {
 			return cached;
 		}
-		return generateAndCache(ip,"USER");
+		return generateAndCache(ip, "USER", null);
 	}
 
 	public TokenCacheEntry refresh(String ip, String refreshToken) {
@@ -64,32 +65,48 @@ public class TokenService {
 		}
 		Jws<Claims> claims = parse(refreshToken);
 		String roleName = claims.getBody().get("role", String.class); // Extract role from claims
+		String username = claims.getBody().get("username", String.class);
 		if (!ip.equals(claims.getBody().get("ip", String.class))) {
 			throw new JwtException("IP mismatch");
 		}
 		if (claims.getBody().getExpiration().before(new Date())) {
 			throw new JwtException("Refresh token expired");
 		}
-		return generateAndCache(ip, roleName);
+		return generateAndCache(ip, roleName, username);
 	}
 
 	public Jws<Claims> parse(String token) throws JwtException {
 		return Jwts.parserBuilder().setSigningKey(secretKey).requireIssuer(issuer).build().parseClaimsJws(token);
 	}
 
-	private TokenCacheEntry generateAndCache(String ip, String roleName) {
+	private TokenCacheEntry generateAndCache(String ip, String roleName, String username) {
 		Instant now = Instant.now();
 		Instant accessExp = now.plusSeconds(accessTtlSec);
 		Instant refreshExp = now.plusSeconds(refreshTtlSec);
 
+		Map<String, Object> accessClaims = new HashMap<>();
+		accessClaims.put("ip", ip);
+		accessClaims.put("scope", "bootstrap");
+		accessClaims.put("role", roleName);
+		if (username != null && !username.isBlank()) {
+			accessClaims.put("username", username);
+		}
+
 		String access = Jwts.builder().setIssuer(issuer).setSubject("ip-access")
-				.addClaims(Map.of("ip", ip, "scope", "bootstrap","role",roleName))
+				.addClaims(accessClaims)
 				.setIssuedAt(Date.from(now))
 				.setExpiration(Date.from(accessExp))
 				.signWith(secretKey, SignatureAlgorithm.HS256).compact();
 
+		Map<String, Object> refreshClaims = new HashMap<>();
+		refreshClaims.put("ip", ip);
+		refreshClaims.put("role", roleName);
+		if (username != null && !username.isBlank()) {
+			refreshClaims.put("username", username);
+		}
+
 		String refresh = Jwts.builder().setIssuer(issuer).setSubject("ip-refresh")
-				.addClaims(Map.of("ip", ip, "role", roleName))
+				.addClaims(refreshClaims)
 				.setIssuedAt(Date.from(now)).setExpiration(Date.from(refreshExp))
 				.signWith(secretKey, SignatureAlgorithm.HS256).compact();
 

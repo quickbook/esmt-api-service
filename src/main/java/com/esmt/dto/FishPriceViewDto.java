@@ -5,19 +5,11 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class FishPriceDto {
-
-    private Long id;
-
+public class FishPriceViewDto {
+    private String size;
     private String fishType;
-
-    private String sizeLabel;
-
-    private String unitType;
-
     private BigDecimal price;
-
+    private String unitText;
+    private Integer displayOrder;
     private String variant;
-
-    private Boolean active;
 }

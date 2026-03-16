@@ -57,7 +57,7 @@ public class UserService {
         String roleName = user.getRole() != null ? user.getRole().getName() : "USER";
         
         // 2. Issue Token with Role
-        TokenCacheEntry entry = tokenService.issueTokenWithRole(clientIp, roleName);
+		TokenCacheEntry entry = tokenService.issueTokenWithRole(clientIp, roleName, user.getUserName());
         long expiresIn = Duration.between(Instant.now(), entry.accessExpiry()).toSeconds();
         UserResponse userData = userMapper.mapToUserResponse(user);
         return new LoginResponse(
