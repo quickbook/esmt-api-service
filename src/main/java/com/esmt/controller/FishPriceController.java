@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.esmt.dto.FishPriceDto;
+import com.esmt.dto.FishPriceDeleteRequestDto;
 import com.esmt.dto.FishPriceViewDto;
 import com.esmt.service.FishPriceService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,7 +28,7 @@ public class FishPriceController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public FishPriceDto create(@RequestBody FishPriceDto dto) {
+    public FishPriceDto create(@Valid @RequestBody FishPriceDto dto) {
         return fishPriceService.create(dto);
     }
 
@@ -36,18 +37,17 @@ public class FishPriceController {
         return fishPriceService.getAll();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public FishPriceDto update(
-            @PathVariable Long id,
-            @RequestBody FishPriceDto dto) {
+    public List<FishPriceDto> update(
+            @RequestBody List<@Valid FishPriceDto> dtos) {
 
-        return fishPriceService.update(id, dto);
+        return fishPriceService.update(dtos);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public void delete(@PathVariable Long id) {
-        fishPriceService.delete(id);
+    public void delete(@Valid @RequestBody FishPriceDeleteRequestDto request) {
+        fishPriceService.delete(request.getIds());
     }
 }

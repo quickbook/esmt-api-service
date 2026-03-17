@@ -2,9 +2,12 @@ package com.esmt.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.esmt.cache.CacheNames;
 import com.esmt.dto.FishPriceDto;
 import com.esmt.dto.FishPriceViewDto;
 import com.esmt.model.DmnFishSize;
@@ -32,6 +35,7 @@ public class FishPriceService {
     private final UnitTypeRepository unitTypeRepository;
 
     @Transactional
+    @CacheEvict(cacheNames = CacheNames.FISH_PRICES_ALL, allEntries = true)
     public FishPriceDto create(FishPriceDto dto) {
         FishPriceMaster entity = map(dto);
         fishPriceRepository.save(entity);
@@ -40,6 +44,8 @@ public class FishPriceService {
         return dto;
     }
 
+    @Cacheable(cacheNames = CacheNames.FISH_PRICES_ALL)
+    @Transactional(readOnly = true)
     public List<FishPriceViewDto> getAll() {
         return fishPriceRepository.findByIsActiveTrue()
                 .stream()
@@ -48,7 +54,29 @@ public class FishPriceService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = CacheNames.FISH_PRICES_ALL, allEntries = true)
+    public List<FishPriceDto> update(List<FishPriceDto> dtos) {
+        if (dtos == null || dtos.isEmpty()) {
+            throw new IllegalArgumentException("At least one fish price item is required for update");
+        }
+
+        return dtos.stream()
+                .map(dto -> {
+                    if (dto.getId() == null) {
+                        throw new IllegalArgumentException("id is required for update");
+                    }
+                    return updateOne(dto.getId(), dto);
+                })
+                .toList();
+    }
+
+    @Transactional
+    @CacheEvict(cacheNames = CacheNames.FISH_PRICES_ALL, allEntries = true)
     public FishPriceDto update(Long id, FishPriceDto dto) {
+        return updateOne(id, dto);
+    }
+
+    private FishPriceDto updateOne(Long id, FishPriceDto dto) {
         FishPriceMaster entity = fishPriceRepository.findById(id).orElseThrow();
         var oldPrice = entity.getPrice();
         var oldActive = entity.getIsActive();
@@ -75,7 +103,27 @@ public class FishPriceService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = CacheNames.FISH_PRICES_ALL, allEntries = true)
+    public void delete(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new IllegalArgumentException("At least one fish price item is required for delete");
+        }
+
+        ids.forEach(id -> {
+            if (id == null) {
+                throw new IllegalArgumentException("id is required for delete");
+            }
+            deleteOne(id);
+        });
+    }
+
+    @Transactional
+    @CacheEvict(cacheNames = CacheNames.FISH_PRICES_ALL, allEntries = true)
     public void delete(Long id) {
+        deleteOne(id);
+    }
+
+    private void deleteOne(Long id) {
         FishPriceMaster entity = fishPriceRepository.findById(id).orElseThrow();
 
         if (!Boolean.TRUE.equals(entity.getIsActive())) {

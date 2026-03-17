@@ -2,8 +2,10 @@ package com.esmt.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.esmt.cache.CacheNames;
 import com.esmt.dto.DomainDataDTO;
 import com.esmt.repository.CountryRepository;
 import com.esmt.repository.FishSizeRepository;
@@ -26,6 +28,7 @@ public class DomainDataService {
     private final PondAccessRepository pondAccessRepository;
     private final UnitTypeRepository unitTypeRepository;
 
+    @Cacheable(cacheNames = CacheNames.DOMAIN_DATA_BY_NAME, key = "#domainName.toLowerCase()")
     public List<DomainDataDTO> getDomainData(String domainName) {
 
         switch (domainName.toLowerCase()) {

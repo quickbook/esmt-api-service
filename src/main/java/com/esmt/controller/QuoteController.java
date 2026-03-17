@@ -2,6 +2,7 @@ package com.esmt.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,14 +21,14 @@ public class QuoteController {
 
     @PostMapping("/estimate")
     public QuoteEstimateResponse estimate(
-            @RequestBody QuoteRequestDto dto) {
+            @Valid @RequestBody QuoteRequestDto dto) {
 
         return service.preview(dto);
     }
 
     @PostMapping("/finalize")
     public QuoteEstimateResponse finalizeQuote(
-            @RequestBody QuoteRequestDto dto) {
+            @Valid @RequestBody QuoteRequestDto dto) {
 
         return service.finalizeQuote(dto);
     }
