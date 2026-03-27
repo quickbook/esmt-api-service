@@ -1,6 +1,7 @@
 package com.esmt.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +21,18 @@ public class DomainDataController {
 	
 
     private final DomainDataService domainDataService;
+    
 	@GetMapping("/{domainName}")
     public ResponseEntity<List<DomainDataDTO>> getDomainData(
             @PathVariable String domainName) {
 
         return ResponseEntity.ok(domainDataService.getDomainData(domainName));
     }
+	
+	@GetMapping("/pond-purpose/by-pond-type")
+	public ResponseEntity<Map<String, List<DomainDataDTO>>> getPondPurpose() {
+
+		return ResponseEntity.ok(domainDataService.getPondPurpose("pong-purpose-by-pond-type"));
+	}
 
 }

@@ -1,17 +1,21 @@
 package com.esmt.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.esmt.cache.CacheNames;
 import com.esmt.dto.DomainDataDTO;
+import com.esmt.model.DmnPondPurpose;
 import com.esmt.repository.CountryRepository;
 import com.esmt.repository.FishSizeRepository;
 import com.esmt.repository.FishTypeRepository;
 import com.esmt.repository.LeadSourceRepository;
 import com.esmt.repository.PondAccessRepository;
+import com.esmt.repository.PondPurposeRepository;
 import com.esmt.repository.UnitTypeRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ public class DomainDataService {
     private final FishSizeRepository fishSizeRepository;
     private final PondAccessRepository pondAccessRepository;
     private final UnitTypeRepository unitTypeRepository;
+    private final PondPurposeRepository pondPurposeRepository;
 
     @Cacheable(cacheNames = CacheNames.DOMAIN_DATA_BY_NAME, key = "#domainName.toLowerCase()")
     public List<DomainDataDTO> getDomainData(String domainName) {
@@ -82,5 +87,24 @@ public class DomainDataService {
             default:
                 throw new IllegalArgumentException("Invalid domain name: " + domainName);
         }
+    }
+
+    @Cacheable(cacheNames = CacheNames.DOMAIN_DATA_BY_NAME, key = "#domainName.toLowerCase()")
+    public Map<String, List<DomainDataDTO>> getPondPurpose(String domainName) {
+
+        return pondPurposeRepository
+                .findByIsActiveTrueOrderByIdAsc()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        DmnPondPurpose::getPondType,
+                        Collectors.mapping(
+                                p -> new DomainDataDTO(
+                                        p.getId(),
+                                        p.getCode(),
+                                        p.getName()
+                                ),
+                                Collectors.toList()
+                        )
+                ));
     }
 }

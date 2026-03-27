@@ -32,7 +32,11 @@ public class QuoteEstimateResponse {
     
     private BigDecimal minimumOrderAmount; 
     
-    private List<String> messages; 
+    private List<String> infoNotes; 
     
-    private List<String> estMessages; 
+    private List<String> disclaimerNotes; 
+    
+    private List<String> errors;
+    
+    private String message;
 }
