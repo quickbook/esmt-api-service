@@ -19,6 +19,8 @@ public class AddonStateMapping {
     private Long id;
 
     private String stateCode;
+    
+    private String stateName;
 
     @ManyToOne
     @JoinColumn(name = "addon_id")

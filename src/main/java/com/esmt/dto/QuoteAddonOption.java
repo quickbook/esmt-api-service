@@ -16,9 +16,9 @@ public class QuoteAddonOption {
 
     private String addonCode;
 
-    private String name;
+    private String fishSize;
 
-    private String description;
+    private String fishName;
 
     private Integer quantity;
 

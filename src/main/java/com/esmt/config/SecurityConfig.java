@@ -89,7 +89,7 @@ public class SecurityConfig {
 
         // Exact origins you want to allow (add staging/production)
         config.setAllowedOrigins(List.of(
-         //   "http://localhost:5173",
+            "http://localhost:5173",
             "https://dev01-ui.pranalyticx.cloud",
             "https://tradingposthub.cloud",
             "https://tradingposthub.com"

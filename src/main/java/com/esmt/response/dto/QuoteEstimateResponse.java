@@ -20,14 +20,18 @@ import lombok.NoArgsConstructor;
 public class QuoteEstimateResponse {
 
     private QuoteType quoteType;
+    
+    private String title;
+    
+    private String description;
 
-    //This is for the package options section, which will be used to provide recommendations and validation for the package options on the frontend
+    //This is for New and Old
     private List<QuotePackageOption> packages;
     
-    //This is for the add-on options section, which will be used to provide recommendations and validation for the add-on options on the frontend
+    //this is only for NEW pond
     private List<QuoteAddonOption> addons;
     
-    //This is for the quantity input section, which will be used to provide recommendations and validation for the quantity inputs on the frontend
+    //this is only for OLD pond
     private List<QuoteQuantityInput> quantityInputs;
     
     private BigDecimal minimumOrderAmount; 

@@ -36,7 +36,7 @@ public class QuoteAddonMaster {
     @JoinColumn(name = "unit_type_id")
     private DmnUnitType unitType;
 
-    private BigDecimal price;
+ 
 
     private Boolean isActive;
 }

@@ -12,17 +12,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MailService {
 
-    public final JavaMailSender mailSender;
+   // public final JavaMailSender mailSender;
 
     public void sendEmail(String to, String subject, String body) throws MessagingException {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
+     //   MimeMessage mimeMessage = mailSender.createMimeMessage();
 
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        MimeMessageHelper helper = new MimeMessageHelper(null, true);
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(body, true); // true = enable HTML
 
-        mailSender.send(mimeMessage);
+      //  mailSender.send(mimeMessage);
     }
     
 }
