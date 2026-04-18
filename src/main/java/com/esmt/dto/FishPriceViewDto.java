@@ -6,10 +6,19 @@ import lombok.Data;
 
 @Data
 public class FishPriceViewDto {
-    private String size;
+	private Long id;
+
+    private Long fishTypeId;
     private String fishType;
+
+    private Long fishSizeId;
+    private String sizeLabel;
+
+    private Long unitTypeId;
+    private String unitType;
+
     private BigDecimal price;
-    private String unitText;
+    private String variant; 
+    
     private Integer displayOrder;
-    private String variant;
 }

@@ -1,11 +1,8 @@
 package com.esmt.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.CreatedDate;
-
+ 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,8 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.ManyToOne; 
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -46,19 +42,6 @@ public class FishPriceMaster {
     private BigDecimal price;
 
     @Column(name = "is_active")
-    private Boolean isActive = true;
-
-    @CreatedDate
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-    
-    private LocalDate effectiveFrom;
-    private LocalDate effectiveTo;
-
-    @PrePersist
-    protected void onCreate() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-    }
+    private Boolean isActive = true;     
+ 
 }

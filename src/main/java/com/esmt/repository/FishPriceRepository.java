@@ -23,12 +23,19 @@ public interface FishPriceRepository extends JpaRepository<FishPriceMaster, Long
 		    AND p.fishSize.id = :fishSizeId
 		    AND p.unitType.id = :unitTypeId
 		    AND p.variant = :variant
-		    AND p.isActive = true
-		    AND CURRENT_DATE BETWEEN p.effectiveFrom AND p.effectiveTo
+		    AND p.isActive = true	
 		""")
 		BigDecimal findActivePrice(Long fishTypeId,
 		                           Long fishSizeId,
 		                           Long unitTypeId,
 		                           String variant);
+	
+	
+	boolean existsByFishType_IdAndFishSize_IdAndUnitType_IdAndVariantAndIsActiveTrue(
+	        Long fishTypeId,
+	        Long fishSizeId,
+	        Long unitTypeId,
+	        String variant
+	);
 	
 }
